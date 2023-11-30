@@ -6,7 +6,6 @@
     <string name="login">Log in</string>
 
     <string name="job_title">Job Title</string>
-    <string name="job_title_hint">Enter a job number</string>
     <string name="add_job_photo">Add Photo</string>
     <string name="job_num"> Job %1$s</string>
     <string name="new_job">New Job</string>

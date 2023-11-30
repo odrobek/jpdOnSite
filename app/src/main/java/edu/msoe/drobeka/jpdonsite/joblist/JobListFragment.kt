@@ -1,4 +1,4 @@
-package edu.msoe.drobeka.jpdonsite
+package edu.msoe.drobeka.jpdonsite.joblist
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,7 +7,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -15,13 +14,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import edu.msoe.drobeka.jpdonsite.R
 import edu.msoe.drobeka.jpdonsite.databinding.FragmentJobListBinding
 import edu.msoe.drobeka.jpdonsite.jobs.Job
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.lang.Math.random
-import java.util.Date
 import java.util.UUID
 
 class JobListFragment : Fragment() {
@@ -99,7 +97,8 @@ class JobListFragment : Fragment() {
             val newJob = Job(
                 id = UUID.randomUUID(),
                 title = (30000..31000).random().toString(),
-                description = "A random job description"
+                description = "A random job description",
+                photos = arrayListOf()
             )
             withContext(Dispatchers.IO) {
                 jobListViewModel.addJob(newJob)

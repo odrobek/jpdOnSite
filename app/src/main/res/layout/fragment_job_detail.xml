@@ -13,17 +13,11 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/job_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/job_title"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
-        <EditText
-            android:id="@+id/crime_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/job_title_hint"
-            android:importantForAutofill="no"
-            android:inputType="text" />
 
         <ImageButton
             android:id="@+id/imageButton"
@@ -33,6 +27,7 @@
             android:contentDescription="@string/add_job_photo"/>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/photoRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

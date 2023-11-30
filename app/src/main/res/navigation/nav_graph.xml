@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/jobListFragment"
-        android:name="edu.msoe.drobeka.jpdonsite.JobListFragment"
+        android:name="edu.msoe.drobeka.jpdonsite.joblist.JobListFragment"
         android:label="JobListFragment"
         tools:layout="@layout/fragment_job_list">
         <action
@@ -25,7 +25,7 @@
     </fragment>
     <fragment
         android:id="@+id/jobDetailFragment"
-        android:name="edu.msoe.drobeka.jpdonsite.JobDetailFragment"
+        android:name="edu.msoe.drobeka.jpdonsite.jobdetail.JobDetailFragment"
         android:label="JobDetailFragment"
         tools:layout="@layout/fragment_job_detail">
         <argument

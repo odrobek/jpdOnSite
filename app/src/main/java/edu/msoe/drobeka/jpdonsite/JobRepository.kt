@@ -29,6 +29,8 @@ class JobRepository private constructor(
     fun getJob(id: UUID): Job = database.jobDao().getJob(id)
     fun addJob(job: Job) = database.jobDao().addJob(job)
 
+    fun updateJob(job: Job) = database.jobDao().updateJob(job)
+
     fun clearDB() = database.clearTables()
 
     companion object {

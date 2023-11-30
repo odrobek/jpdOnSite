@@ -11,6 +11,9 @@ class JobConverters {
 
     @TypeConverter
     fun toPhotos(photos: String): MutableList<String> {
+        if(photos == "[]") {
+            return mutableListOf()
+        }
         return photos.replace("[", "").replace("]", "").replace(" ", "").split(",").toMutableList()
     }
 }

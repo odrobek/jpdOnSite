@@ -1,7 +1,8 @@
-package edu.msoe.drobeka.jpdonsite
+package edu.msoe.drobeka.jpdonsite.joblist
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import edu.msoe.drobeka.jpdonsite.JobRepository
 import edu.msoe.drobeka.jpdonsite.jobs.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

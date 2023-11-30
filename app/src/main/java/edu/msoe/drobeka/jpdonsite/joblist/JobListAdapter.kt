@@ -1,8 +1,9 @@
-package edu.msoe.drobeka.jpdonsite
+package edu.msoe.drobeka.jpdonsite.joblist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import edu.msoe.drobeka.jpdonsite.R
 import edu.msoe.drobeka.jpdonsite.databinding.ListItemJobBinding
 import edu.msoe.drobeka.jpdonsite.jobs.Job
 import java.util.UUID

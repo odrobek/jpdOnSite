@@ -9,5 +9,5 @@ data class Job(
     @PrimaryKey val id: UUID,
     val title: String,
     val description: String,
-    val photos: MutableList<String> = mutableListOf()
+    val photos: MutableList<String> = arrayListOf()
 )
