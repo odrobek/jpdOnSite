@@ -16,7 +16,7 @@ class PhotoHolder(
         if (photoLocation != "") {
             val photoFile = File(binding.root.context.applicationContext.filesDir, photoLocation)
 
-            if (photoFile?.exists() == true) {
+            if (photoFile.exists()) {
                 binding.jobPhoto.doOnLayout { measuredView ->
                     val scaledBitMap = getScaledBitmap(
                         photoFile.path,

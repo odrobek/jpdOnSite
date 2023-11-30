@@ -1,5 +1,6 @@
 package edu.msoe.drobeka.jpdonsite.jobdetail
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -33,9 +34,10 @@ class JobDetailViewModel(jobId: UUID) : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-
+        Log.d("JobDetailViewModel", job.value?.photos.toString())
         job.value?.let {
             viewModelScope.launch(Dispatchers.IO) {
+                Log.d("JobDetailViewModel", it.photos.toString())
                 jobRepository.updateJob(it)
             }
         }

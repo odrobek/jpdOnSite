@@ -43,10 +43,10 @@ class JobDetailFragment : Fragment() {
     ) { didTakePhoto ->
         if (didTakePhoto && lastPhotoName != null) {
             jobDetailViewModel.updateJob { oldJob ->
-                var photos = oldJob.photos
-                photos.add(lastPhotoName!!)
+                var newPhotos = oldJob.photos
+                newPhotos.add(lastPhotoName!!)
                 updateUi(oldJob)
-                oldJob.copy(photos = photos)
+                oldJob.copy(photos = newPhotos)
             }
         }
     }
