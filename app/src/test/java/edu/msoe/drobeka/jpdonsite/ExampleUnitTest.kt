@@ -9,9 +9,18 @@ import org.junit.Assert.*
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
-class ExampleUnitTest {
+class KotlinTesting {
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+    fun toStringListTest() {
+        var photos = mutableListOf<String>()
+        photos.add("photos1")
+        photos.add("photo2")
+
+        var listString = photos.toString()
+
+        val split = listString.replace("[", "").replace("]", "").replace(" ", "").split(",")
+
+        println(split)
+        assertEquals(photos, split)
     }
 }

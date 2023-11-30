@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navgraph.xml"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="edu.msoe.drobeka.jpdonsite.LoginFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/login_action"
+            app:destination="@id/jobListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/jobListFragment"
+        android:name="edu.msoe.drobeka.jpdonsite.JobListFragment"
+        android:label="JobListFragment"
+        tools:layout="@layout/fragment_job_list">
+        <action
+            android:id="@+id/loadJobDetail"
+            app:destination="@id/jobDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/jobDetailFragment"
+        android:name="edu.msoe.drobeka.jpdonsite.JobDetailFragment"
+        android:label="JobDetailFragment"
+        tools:layout="@layout/fragment_job_detail">
+        <argument
+            android:name="jobId"
+            app:argType="java.util.UUID" />
+    </fragment>
+</navigation>
