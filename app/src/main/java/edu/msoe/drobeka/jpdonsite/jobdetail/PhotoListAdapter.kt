@@ -13,6 +13,9 @@ class PhotoHolder(
     private val binding: ListJobPhotosBinding
 ) : RecyclerView.ViewHolder(binding.root) {
     fun bind(photoLocation: String) {
+        binding.root.setOnClickListener {
+            Toast.makeText(binding.root.context, photoLocation, Toast.LENGTH_SHORT).show()
+        }
         if (photoLocation != "") {
             val photoFile = File(binding.root.context.applicationContext.filesDir, photoLocation)
 

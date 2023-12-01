@@ -48,6 +48,7 @@ class JobDetailFragment : Fragment() {
                 updateUi(oldJob)
                 oldJob.copy(photos = newPhotos)
             }
+            jobDetailViewModel.afterPhotoChange()
         }
     }
 
@@ -70,7 +71,7 @@ class JobDetailFragment : Fragment() {
 
         binding.apply {
             imageButton.setOnClickListener {
-                lastPhotoName = "IMG_${Date()}.JPG"
+                lastPhotoName = "IMG_${Date().toString().replace(" ", "")}.JPG"
                 val photoFile = File(requireContext().applicationContext.filesDir,
                     lastPhotoName)
                 val photoUri = FileProvider.getUriForFile(

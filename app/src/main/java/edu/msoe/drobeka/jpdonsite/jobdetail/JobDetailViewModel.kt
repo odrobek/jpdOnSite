@@ -32,16 +32,14 @@ class JobDetailViewModel(jobId: UUID) : ViewModel() {
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        Log.d("JobDetailViewModel", job.value?.photos.toString())
+    fun afterPhotoChange() {
         job.value?.let {
             viewModelScope.launch(Dispatchers.IO) {
-                Log.d("JobDetailViewModel", it.photos.toString())
                 jobRepository.updateJob(it)
             }
         }
     }
+
 }
 
 class JobDetailViewModelFactory(

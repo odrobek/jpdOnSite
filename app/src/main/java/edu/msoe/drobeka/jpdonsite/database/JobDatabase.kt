@@ -4,6 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import edu.msoe.drobeka.jpdonsite.jobs.Job
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -13,6 +14,7 @@ import kotlinx.coroutines.launch
 abstract class JobDatabase : RoomDatabase() {
     abstract fun jobDao(): JobDao
 
+    @OptIn(DelicateCoroutinesApi::class)
     fun clearTables() {
         GlobalScope.launch(Dispatchers.IO) {
             this@JobDatabase.clearAllTables()
