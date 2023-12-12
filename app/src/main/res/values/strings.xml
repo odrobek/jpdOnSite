@@ -10,4 +10,6 @@
     <string name="job_num"> Job %1$s</string>
     <string name="new_job">New Job</string>
     <string name="clear_db">Clear Database</string>
+
+    <string name="client_id">768533009145-og2gmcmfbk0008j3r3n8arhl73alahna.apps.googleusercontent.com</string>
 </resources>

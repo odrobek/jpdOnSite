@@ -35,6 +35,11 @@ class LoginFragment: Fragment() {
 
         binding.button.setOnClickListener {
             // check if username and password match, then continue to next fragment
+//            if(binding.usernameEditText.text.toString() == "jpdgraphics" && binding.passwordEditText.text.toString() == "installer1") {
+//                findNavController().navigate(
+//                    LoginFragmentDirections.loginAction()
+//                )
+//            }
             findNavController().navigate(
                 LoginFragmentDirections.loginAction()
             )
