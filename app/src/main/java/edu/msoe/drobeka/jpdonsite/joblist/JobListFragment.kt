@@ -1,5 +1,6 @@
 package edu.msoe.drobeka.jpdonsite.joblist
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +11,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.createViewModelLazy
@@ -33,6 +35,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import edu.msoe.drobeka.jpdonsite.R
 import edu.msoe.drobeka.jpdonsite.databinding.FragmentJobListBinding
+import edu.msoe.drobeka.jpdonsite.googledrive.GoogleDrive
 import edu.msoe.drobeka.jpdonsite.jobs.Job
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -67,14 +70,14 @@ class JobListFragment : Fragment() {
             .build()
 
         googleAuth = GoogleSignIn.getClient(requireContext(), gso)
-        Log.d("JobListFragment", googleAuth.toString())
+        Log.d("JobListFragment", auth.currentUser!!.email!!)
 
 
-        googleSignIN()
-
+        googleSignIn()
+        GoogleDrive.initialize(requireContext())
     }
 
-    private fun googleSignIN() {
+    private fun googleSignIn() {
         val account = GoogleSignIn.getLastSignedInAccount(requireContext())
         if (account == null) {
             val signInIntent = googleAuth.signInIntent
@@ -102,27 +105,11 @@ class JobListFragment : Fragment() {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d(TAG, "signInWithCredential:success")
-                    val user = auth.currentUser
+                    Log.d(TAG, auth.currentUser.toString())
                 } else {
                     Log.w(TAG, "signInWithCredential:failure", task.exception)
                 }
             }
-    }
-
-    private fun getDriveService(context: Context): Drive {
-        GoogleSignIn.getLastSignedInAccount(context).let { googleAccount ->
-            val credential = GoogleAccountCredential.usingOAuth2(
-                requireContext(), listOf(DriveScopes.DRIVE)
-            )
-            credential.selectedAccount = googleAccount!!.account!!
-            return Drive.Builder(
-                AndroidHttp.newCompatibleTransport(),
-                JacksonFactory.getDefaultInstance(),
-                credential
-            )
-                .setApplicationName(getString(R.string.app_name))
-                .build()
-        }
     }
 
     override fun onCreateView(
@@ -147,14 +134,50 @@ class JobListFragment : Fragment() {
                     withContext(Dispatchers.IO) {
                         launch {
                             try {
-                                val drive = getDriveService(requireContext())
-                                var result = drive.Files().list()
-                                    .setFields("nextPageToken, files(id, name, parents)")
-                                    .setQ("'1dfyAFcYuySmFgqgpzZirjOjepXk9rbc8' in parents and trashed=false")
-                                    .execute()
-                                for(file in result.files) {
-                                    Log.d(TAG, file.toString())
+                                // get folder id for 'jobs' so that other files are not found
+                                // move this to a different class
+                                // simulate drive behavior with a different class
+                                val drive = GoogleDrive.get().drive
+                                val filesInRoot = drive.Files().list()
+                                    .setFields("files(id, name, parents)")
+                                    .setQ("'root' in parents and trashed=false")
+                                    .execute().files
+
+                                var jobsFolderId = ""
+                                for (file in filesInRoot) {
+                                    if (file.name == "jobs") {
+                                        jobsFolderId = file.id
+                                    }
                                 }
+
+                                // get all files within the jobs folder
+                                // TODO filter so only folders show up for this part
+                                var result = drive.Files().list()
+                                    .setFields("files(id, name)")
+                                    .setQ("'$jobsFolderId' in parents and trashed=false")
+                                    .execute()
+
+                                var folderNames = mutableListOf<Job>()
+                                for (file in result.files) {
+                                    Log.d(TAG, file.toString())
+                                    folderNames.add(
+                                        Job(
+                                            file.id,
+                                            file.name, ""
+                                        )
+                                    )
+                                }
+                                withContext(Dispatchers.Main) {
+//                                    binding.progressBarCyclic.visibility = View.GONE
+                                    binding.jobRecyclerView.adapter =
+                                        JobListAdapter(folderNames.sortedBy { job -> job.title }
+                                            .reversed()) { folderId ->
+                                                findNavController().navigate(
+                                                    JobListFragmentDirections.loadJobDetail(folderId)
+                                                )
+                                        }
+                                }
+
                             }
                             catch (userAuthEx: UserRecoverableAuthIOException) {
                                 startActivity(
@@ -166,16 +189,6 @@ class JobListFragment : Fragment() {
                             }
                         }
                     }
-                }
-
-
-                jobListViewModel.jobs.collect { jobs ->
-                    binding.jobRecyclerView.adapter =
-                        JobListAdapter(jobs.sortedBy { job -> job.title }.reversed()) { jobId ->
-                            findNavController().navigate(
-                                JobListFragmentDirections.loadJobDetail(jobId)
-                            )
-                        }
                 }
             }
         }
@@ -193,30 +206,12 @@ class JobListFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.new_job -> {
-                showNewJob()
-                true
-            }
 
             R.id.clear_db -> {
                 jobListViewModel.clearDB()
                 true
             }
             else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    private fun showNewJob() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            val newJob = Job(
-                id = UUID.randomUUID(),
-                title = (30000..31000).random().toString(),
-                description = "A random job description",
-                photos = arrayListOf()
-            )
-            withContext(Dispatchers.IO) {
-                jobListViewModel.addJob(newJob)
-            }
         }
     }
 }

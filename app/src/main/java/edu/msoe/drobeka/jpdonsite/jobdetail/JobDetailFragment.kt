@@ -17,12 +17,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import edu.msoe.drobeka.jpdonsite.R
 import edu.msoe.drobeka.jpdonsite.databinding.FragmentJobDetailBinding
-import edu.msoe.drobeka.jpdonsite.jobs.Job
+import edu.msoe.drobeka.jpdonsite.googledrive.GoogleDrive
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.Date
+
 
 class JobDetailFragment : Fragment() {
 
@@ -35,7 +37,7 @@ class JobDetailFragment : Fragment() {
     private val args: JobDetailFragmentArgs by navArgs()
 
     private val jobDetailViewModel: JobDetailViewModel by viewModels {
-        JobDetailViewModelFactory(args.jobId)
+        JobDetailViewModelFactory(args.folderId)
     }
 
     private val takePhoto = registerForActivityResult(
@@ -45,7 +47,6 @@ class JobDetailFragment : Fragment() {
             jobDetailViewModel.updateJob { oldJob ->
                 var newPhotos = oldJob.photos
                 newPhotos.add(lastPhotoName!!)
-                updateUi(oldJob)
                 oldJob.copy(photos = newPhotos)
             }
             jobDetailViewModel.afterPhotoChange()
@@ -83,6 +84,14 @@ class JobDetailFragment : Fragment() {
                 takePhoto.launch(photoUri)
             }
 
+            fromGallery.setOnClickListener {
+                val intent = Intent()
+                intent.setType("image/*")
+                intent.setAction(Intent.ACTION_GET_CONTENT)
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1)
+            }
+
+
             val captureImageIntent = takePhoto.contract.createIntent(
                 requireContext(),
                 Uri.parse("")
@@ -92,20 +101,20 @@ class JobDetailFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                jobDetailViewModel.job.collect { job ->
-                    job?.let { updateUi(it) }
+                var folder: com.google.api.services.drive.model.File? = null
+                withContext(Dispatchers.IO) {
+                    folder = GoogleDrive.get().drive.Files().get(args.folderId).execute()
                 }
+                updateUi(folder)
             }
         }
     }
 
-    private fun updateUi(job: Job) {
+    private fun updateUi(folder: com.google.api.services.drive.model.File?) {
         binding.apply {
-            if (jobTitle.text.toString() != job.title) {
-                jobTitle.text = "Job " + job.title
-            }
+            jobTitle.text = folder!!.name
 
-            photoRecyclerView.adapter = PhotoListAdapter(job.photos)
+            // photoRecyclerView.adapter = PhotoListAdapter(job.photos)
         }
     }
 

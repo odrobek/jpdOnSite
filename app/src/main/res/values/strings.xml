@@ -5,11 +5,11 @@
     <string name="password">Password</string>
     <string name="login">Log in</string>
 
-    <string name="job_title">Job Title</string>
+    <string name="job_title">Loading...</string>
     <string name="add_job_photo">Add Photo</string>
     <string name="job_num"> Job %1$s</string>
-    <string name="new_job">New Job</string>
-    <string name="clear_db">Clear Database</string>
+    <string name="refresh">Refresh</string>
+    <string name="from_gallery">Choose from Gallery</string>
 
     <string name="client_id">768533009145-og2gmcmfbk0008j3r3n8arhl73alahna.apps.googleusercontent.com</string>
 </resources>

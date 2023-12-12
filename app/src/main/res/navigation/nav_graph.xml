@@ -29,7 +29,7 @@
         android:label="JobDetailFragment"
         tools:layout="@layout/fragment_job_detail">
         <argument
-            android:name="jobId"
-            app:argType="java.util.UUID" />
+            android:name="folderId"
+            app:argType="string" />
     </fragment>
 </navigation>
