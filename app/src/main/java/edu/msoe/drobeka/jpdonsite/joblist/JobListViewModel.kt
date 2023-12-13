@@ -23,7 +23,9 @@ class JobListViewModel : ViewModel() {
 
     init {
         viewModelScope.launch {
+            _jobs.collect {
 
+            }
         }
     }
 

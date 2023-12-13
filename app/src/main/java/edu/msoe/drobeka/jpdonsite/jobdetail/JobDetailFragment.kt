@@ -14,6 +14,9 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,9 +26,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.api.client.http.FileContent
+import edu.msoe.drobeka.jpdonsite.R
 import edu.msoe.drobeka.jpdonsite.databinding.FragmentJobDetailBinding
 import edu.msoe.drobeka.jpdonsite.googledrive.GoogleDrive
 import kotlinx.coroutines.CoroutineScope
@@ -39,6 +44,10 @@ import java.util.Date
 
 private const val TAG = "JobDetailFragment"
 
+/**
+ * This is the fragment class for the view which holds detailed information
+ * about a job after it is clicked on
+ */
 class JobDetailFragment : Fragment() {
 
     private var _binding: FragmentJobDetailBinding? = null
@@ -49,10 +58,14 @@ class JobDetailFragment : Fragment() {
 
     private val args: JobDetailFragmentArgs by navArgs()
 
+    // Not in use right now, but eventually will move to the view model
     private val jobDetailViewModel: JobDetailViewModel by viewModels {
         JobDetailViewModelFactory(args.folderId)
     }
 
+    /**
+     * Take photo and then immediately upload it to Google Drive
+     */
     private val takePhoto = registerForActivityResult(
         ActivityResultContracts.TakePicture()
     ) { didTakePhoto ->
@@ -76,6 +89,11 @@ class JobDetailFragment : Fragment() {
     }
 
     private var lastPhotoName : String? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -122,6 +140,7 @@ class JobDetailFragment : Fragment() {
             imageButton.isEnabled = canResolveIntent(captureImageIntent)
         }
 
+        // Should be done every time the fragment view is started/refreshed
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 var folder: com.google.api.services.drive.model.File? = null
@@ -136,18 +155,20 @@ class JobDetailFragment : Fragment() {
                         filesInFolder.add(file.id)
                         getImageFile(file.id)
                     }
-
-                    // download image and then save bitmaps
-
-
                 }
                 updateUi(folder, filesInFolder)
             }
         }
     }
 
+    /**
+     * Found this function and the other online for a good way to
+     * download images.
+     * This function determines if a file can be placed on the device and then gets
+     * the file from Google Drive to download it
+     */
     private fun getImageFile(fileId: String) {
-        Log.e("idDownload", fileId)
+        Log.d("idDownload", fileId)
         val file = File(requireContext().applicationContext.filesDir, "${fileId}.jpg")
         if (!file.exists()) {
             try {
@@ -159,6 +180,11 @@ class JobDetailFragment : Fragment() {
         }
     }
 
+    /**
+     * See comment for getImageFile().
+     * This function downloads the file from Google Drive as an outputStream
+     * and then writes it to a file on the device
+     */
     private fun saveImageInFilesDir(id: String?) {
         CoroutineScope(Dispatchers.IO).launch {
             val file = File(requireContext().applicationContext.filesDir, "${id}.jpg")
@@ -168,13 +194,12 @@ class JobDetailFragment : Fragment() {
                     .executeMediaAndDownloadTo(outputStream)
                 outputStream.flush()
                 outputStream.close()
-                Log.d(TAG, "written")
+                Log.d(TAG, "$id written")
             } catch (e: Exception) {
                 Log.d(TAG, e.message!!)
             }
         }
     }
-
 
 
     private fun updateUi(folder: com.google.api.services.drive.model.File?,
@@ -194,5 +219,25 @@ class JobDetailFragment : Fragment() {
                 PackageManager.MATCH_DEFAULT_ONLY
             )
         return resolvedActivity != null
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.fragment_job_list, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+
+            R.id.refresh -> {
+                val navController = findNavController()
+                navController.run {
+                    popBackStack()
+                    navigate(JobDetailFragmentDirections.refresh(args.folderId))
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

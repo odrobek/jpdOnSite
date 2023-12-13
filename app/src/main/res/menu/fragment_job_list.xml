@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/clear_db"
+        android:id="@+id/refresh"
         android:icon="@drawable/ic_menu_clear"
         android:title="@string/refresh"
         app:showAsAction="ifRoom|withText" />

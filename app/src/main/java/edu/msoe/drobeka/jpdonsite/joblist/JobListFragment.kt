@@ -156,8 +156,6 @@ class JobListFragment : Fragment() {
                                     }
                                 }
 
-                                // get all files within the jobs folder
-                                // TODO filter so only folders show up for this part
                                 var result = drive.Files().list()
                                     .setFields("files(id, name)")
                                     .setQ("'$jobsFolderId' in parents and trashed=false")
@@ -212,8 +210,12 @@ class JobListFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
 
-            R.id.clear_db -> {
-                jobListViewModel.clearDB()
+            R.id.refresh -> {
+                val navController = findNavController()
+                navController.run {
+                    popBackStack()
+                    navigate(R.id.jobListFragment)
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)

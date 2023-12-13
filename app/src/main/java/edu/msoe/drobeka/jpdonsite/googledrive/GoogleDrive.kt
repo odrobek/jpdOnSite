@@ -7,7 +7,6 @@
 package edu.msoe.drobeka.jpdonsite.googledrive
 
 import android.content.Context
-import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
@@ -15,19 +14,14 @@ import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import edu.msoe.drobeka.jpdonsite.R
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
-import java.io.File
-import java.io.FileOutputStream
 
 private const val TAG = "GoogleDrive"
 
+/**
+ * Singleton class for the Google Drive service.
+ */
 class GoogleDrive private constructor(
-    private val context: Context,
-    private val coroutineScope: CoroutineScope = GlobalScope
+    context: Context
 ) {
     var drive: Drive
 
@@ -35,6 +29,9 @@ class GoogleDrive private constructor(
         drive = getDriveService(context)
     }
 
+    /**
+     * Return the drive service if there is an account signed in
+     */
     private fun getDriveService(context: Context): Drive {
         GoogleSignIn.getLastSignedInAccount(context).let { googleAccount ->
             val credential = GoogleAccountCredential.usingOAuth2(

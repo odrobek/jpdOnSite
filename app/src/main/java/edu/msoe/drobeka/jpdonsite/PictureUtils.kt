@@ -11,6 +11,10 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import kotlin.math.roundToInt
 
+/**
+ * This function comes from the provided code in the Big Nerd Ranch Android textbook:
+ * https://bignerdranch.com/books/android-programming-the-big-nerd-ranch-guide-5th-edition/
+ */
 fun getScaledBitmap(path: String, destWidth: Int, destHeight: Int): Bitmap? {
     // read in dimensions of image on the disk
     val options = BitmapFactory.Options()
@@ -30,14 +34,15 @@ fun getScaledBitmap(path: String, destWidth: Int, destHeight: Int): Bitmap? {
         minOf(heightScale, widthScale).roundToInt()
     }
 
-    if(BitmapFactory.decodeFile(path, BitmapFactory.Options().apply {
-            inSampleSize = sampleSize
-        }) != null) {
-        return BitmapFactory.decodeFile(path, BitmapFactory.Options().apply {
-            inSampleSize = sampleSize
-        })
-    }
 
+    // had to add this in because if it can't decode the file it crashes the application
     // read in and create final bitmap
+
+    val bitmap = BitmapFactory.decodeFile(path, BitmapFactory.Options().apply {
+        inSampleSize = sampleSize
+    })
+    if(bitmap != null) {
+        return bitmap
+    }
     return null
 }

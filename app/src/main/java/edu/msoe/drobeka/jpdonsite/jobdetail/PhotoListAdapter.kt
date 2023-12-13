@@ -30,7 +30,6 @@ class PhotoHolder(
 
         binding.deletePhoto.isEnabled = false
 
-        binding.textView2.text = photoLocation
         if (photoLocation != "") {
             val photoFile = File(binding.root.context.applicationContext.filesDir,
                 "$photoLocation.jpg"
@@ -44,6 +43,8 @@ class PhotoHolder(
                         measuredView.height
                     )
                     var counter = 0
+                    // Issues with getting null bitmaps - decided to rerun it 10 times to see if it changes
+                    // https://stackoverflow.com/questions/19515373/android-bitmapfactory-decodefile-intermittently-returning-null
                     while (scaledBitMap == null && counter < 10) {
                         scaledBitMap = getScaledBitmap(
                                 photoFile.absolutePath,
