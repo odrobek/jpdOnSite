@@ -1,3 +1,10 @@
+/**
+ * Olek Drobek
+ * CSC 4911
+ * Final Project - JPD OnSite
+ * JobListViewModel.kt
+ */
+
 package edu.msoe.drobeka.jpdonsite.joblist
 
 import androidx.lifecycle.ViewModel

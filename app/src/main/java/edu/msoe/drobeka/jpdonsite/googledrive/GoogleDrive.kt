@@ -1,6 +1,13 @@
+/**
+ * Olek Drobek
+ * CSC 4911
+ * Final Project - JPD OnSite
+ * GoogleDrive.kt
+ */
 package edu.msoe.drobeka.jpdonsite.googledrive
 
 import android.content.Context
+import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
@@ -9,15 +16,20 @@ import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import edu.msoe.drobeka.jpdonsite.R
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
+
+private const val TAG = "GoogleDrive"
 
 class GoogleDrive private constructor(
-    context: Context,
+    private val context: Context,
     private val coroutineScope: CoroutineScope = GlobalScope
 ) {
-    val context: Context = context
     var drive: Drive
-    var jobsFolderId: String = ""
 
     init {
         drive = getDriveService(context)
@@ -38,6 +50,7 @@ class GoogleDrive private constructor(
                 .build()
         }
     }
+
 
     companion object {
         private var INSTANCE: GoogleDrive? = null

@@ -1,3 +1,9 @@
+/**
+ * Olek Drobek
+ * CSC 4911
+ * Final Project - JPD OnSite
+ * PhotoListAdapter.kt
+ */
 package edu.msoe.drobeka.jpdonsite.jobdetail
 
 import android.view.LayoutInflater
@@ -7,7 +13,12 @@ import androidx.core.view.doOnLayout
 import androidx.recyclerview.widget.RecyclerView
 import edu.msoe.drobeka.jpdonsite.databinding.ListJobPhotosBinding
 import edu.msoe.drobeka.jpdonsite.getScaledBitmap
+import edu.msoe.drobeka.jpdonsite.googledrive.GoogleDrive
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 import java.io.File
+import kotlin.coroutines.coroutineContext
 
 class PhotoHolder(
     private val binding: ListJobPhotosBinding
@@ -16,20 +27,27 @@ class PhotoHolder(
         binding.root.setOnClickListener {
             Toast.makeText(binding.root.context, photoLocation, Toast.LENGTH_SHORT).show()
         }
+
+        binding.deletePhoto.isEnabled = false
+
+        binding.textView2.text = photoLocation
         if (photoLocation != "") {
-            val photoFile = File(binding.root.context.applicationContext.filesDir, photoLocation)
+            val photoFile = File(binding.root.context.applicationContext.filesDir,
+                "$photoLocation.jpg"
+            )
 
             if (photoFile.exists()) {
                 binding.jobPhoto.doOnLayout { measuredView ->
                     val scaledBitMap = getScaledBitmap(
-                        photoFile.path,
+                        photoFile.absolutePath,
                         measuredView.width,
                         measuredView.height
                     )
-                    binding.jobPhoto.setImageBitmap(scaledBitMap)
-                    binding.jobPhoto.tag = photoLocation
-                    binding.jobPhoto.contentDescription =
-                        ""
+                    if (scaledBitMap != null) {
+                        binding.jobPhoto.setImageBitmap(scaledBitMap)
+                        binding.jobPhoto.tag = photoLocation
+                        binding.jobPhoto.contentDescription = ""
+                    }
                 }
             } else {
                 binding.jobPhoto.setImageBitmap(null)

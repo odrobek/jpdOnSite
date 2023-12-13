@@ -1,10 +1,17 @@
+/**
+ * Olek Drobek
+ * CSC 4911
+ * Final Project - JPD OnSite
+ * PictureUtils.kt
+ */
+
 package edu.msoe.drobeka.jpdonsite
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import kotlin.math.roundToInt
 
-fun getScaledBitmap(path: String, destWidth: Int, destHeight: Int): Bitmap {
+fun getScaledBitmap(path: String, destWidth: Int, destHeight: Int): Bitmap? {
     // read in dimensions of image on the disk
     val options = BitmapFactory.Options()
     options.inJustDecodeBounds = true
@@ -23,9 +30,14 @@ fun getScaledBitmap(path: String, destWidth: Int, destHeight: Int): Bitmap {
         minOf(heightScale, widthScale).roundToInt()
     }
 
-    // read in and create final bitmap
+    if(BitmapFactory.decodeFile(path, BitmapFactory.Options().apply {
+            inSampleSize = sampleSize
+        }) != null) {
+        return BitmapFactory.decodeFile(path, BitmapFactory.Options().apply {
+            inSampleSize = sampleSize
+        })
+    }
 
-    return BitmapFactory.decodeFile(path, BitmapFactory.Options().apply {
-        inSampleSize = sampleSize
-    })
+    // read in and create final bitmap
+    return null
 }

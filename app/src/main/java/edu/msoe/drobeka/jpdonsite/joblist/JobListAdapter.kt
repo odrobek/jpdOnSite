@@ -1,3 +1,9 @@
+/**
+ * Olek Drobek
+ * CSC 4911
+ * Final Project - JPD OnSite
+ * JobListAdapter.kt
+ */
 package edu.msoe.drobeka.jpdonsite.joblist
 
 import android.view.LayoutInflater

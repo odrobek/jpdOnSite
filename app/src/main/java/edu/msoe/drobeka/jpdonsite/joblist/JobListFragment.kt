@@ -1,3 +1,9 @@
+/**
+ * Olek Drobek
+ * CSC 4911
+ * Final Project - JPD OnSite
+ * JobListFragment.kt
+ */
 package edu.msoe.drobeka.jpdonsite.joblist
 
 import android.app.ProgressDialog
@@ -168,7 +174,6 @@ class JobListFragment : Fragment() {
                                     )
                                 }
                                 withContext(Dispatchers.Main) {
-//                                    binding.progressBarCyclic.visibility = View.GONE
                                     binding.jobRecyclerView.adapter =
                                         JobListAdapter(folderNames.sortedBy { job -> job.title }
                                             .reversed()) { folderId ->

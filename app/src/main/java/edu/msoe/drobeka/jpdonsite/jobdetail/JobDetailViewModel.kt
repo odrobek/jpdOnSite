@@ -1,3 +1,9 @@
+/**
+ * Olek Drobek
+ * CSC 4911
+ * Final Project - JPD OnSite
+ * JobDetailViewModel.kt
+ */
 package edu.msoe.drobeka.jpdonsite.jobdetail
 
 import android.util.Log

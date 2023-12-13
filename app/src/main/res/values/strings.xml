@@ -4,6 +4,7 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">Log in</string>
+    <string name="bad_login">Incorrect username or password</string>
 
     <string name="job_title">Loading...</string>
     <string name="add_job_photo">Add Photo</string>
