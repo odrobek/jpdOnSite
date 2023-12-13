@@ -38,12 +38,21 @@ class PhotoHolder(
 
             if (photoFile.exists()) {
                 binding.jobPhoto.doOnLayout { measuredView ->
-                    val scaledBitMap = getScaledBitmap(
+                    var scaledBitMap = getScaledBitmap(
                         photoFile.absolutePath,
                         measuredView.width,
                         measuredView.height
                     )
-                    if (scaledBitMap != null) {
+                    var counter = 0
+                    while (scaledBitMap == null && counter < 10) {
+                        scaledBitMap = getScaledBitmap(
+                                photoFile.absolutePath,
+                        measuredView.width,
+                        measuredView.height
+                        )
+                        counter++
+                    }
+                    if(scaledBitMap != null) {
                         binding.jobPhoto.setImageBitmap(scaledBitMap)
                         binding.jobPhoto.tag = photoLocation
                         binding.jobPhoto.contentDescription = ""
