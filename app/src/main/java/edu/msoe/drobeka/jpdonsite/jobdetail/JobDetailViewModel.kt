@@ -1,10 +1,15 @@
+/**
+ * Olek Drobek
+ * CSC 4911
+ * Final Project - JPD OnSite
+ * JobDetailViewModel.kt
+ */
 package edu.msoe.drobeka.jpdonsite.jobdetail
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
-import edu.msoe.drobeka.jpdonsite.JobRepository
+import edu.msoe.drobeka.jpdonsite.googledrive.GoogleDrive
 import edu.msoe.drobeka.jpdonsite.jobs.Job
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,16 +19,15 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-class JobDetailViewModel(jobId: UUID) : ViewModel() {
-    private val jobRepository = JobRepository.get()
+class JobDetailViewModel(folderId: String) : ViewModel() {
 
     private val _job: MutableStateFlow<Job?> = MutableStateFlow(null)
     val job: StateFlow<Job?> = _job.asStateFlow()
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            _job.value = jobRepository.getJob(jobId)
-        }
+//        job.collect {
+//            GoogleDrive.get().drive.Files()
+//        }
     }
 
     fun updateJob(onUpdate: (Job) -> Job) {
@@ -34,18 +38,16 @@ class JobDetailViewModel(jobId: UUID) : ViewModel() {
 
     fun afterPhotoChange() {
         job.value?.let {
-            viewModelScope.launch(Dispatchers.IO) {
-                jobRepository.updateJob(it)
-            }
+
         }
     }
 
 }
 
 class JobDetailViewModelFactory(
-    private val jobId: UUID
+    private val folderId: String
 ) : ViewModelProvider.Factory {
     override fun <T: ViewModel> create(modelClass: Class<T>): T {
-        return JobDetailViewModel(jobId) as T
+        return JobDetailViewModel(folderId) as T
     }
 }

@@ -22,6 +22,9 @@
         <action
             android:id="@+id/loadJobDetail"
             app:destination="@id/jobDetailFragment" />
+        <action
+            android:id="@+id/refresh"
+            app:destination="@id/jobDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/jobDetailFragment"
@@ -29,7 +32,10 @@
         android:label="JobDetailFragment"
         tools:layout="@layout/fragment_job_detail">
         <argument
-            android:name="jobId"
-            app:argType="java.util.UUID" />
+            android:name="folderId"
+            app:argType="string" />
+        <action
+            android:id="@+id/refresh"
+            app:destination="@id/jobDetailFragment" />
     </fragment>
 </navigation>

@@ -1,7 +1,14 @@
+/**
+ * Olek Drobek
+ * CSC 4911
+ * Final Project - JPD OnSite
+ * JobListAdapter.kt
+ */
 package edu.msoe.drobeka.jpdonsite.joblist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import edu.msoe.drobeka.jpdonsite.R
 import edu.msoe.drobeka.jpdonsite.databinding.ListItemJobBinding
@@ -11,7 +18,7 @@ import java.util.UUID
 class JobHolder(
     private val binding: ListItemJobBinding
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(job: Job, onJobClicked: (jobId: UUID) -> Unit) {
+    fun bind(job: Job, onJobClicked: (folderId: String) -> Unit) {
         binding.textView.text = binding.root.context.getString(R.string.job_num, job.title)
         binding.root.setOnClickListener {
             onJobClicked(job.id)
@@ -21,7 +28,7 @@ class JobHolder(
 
 class JobListAdapter(
     private val jobs: List<Job>,
-    private val onJobClicked: (jobId: UUID) -> Unit
+    private val onJobClicked: (folderId: String) -> Unit
 ) : RecyclerView.Adapter<JobHolder>() {
 
     override fun onCreateViewHolder(
